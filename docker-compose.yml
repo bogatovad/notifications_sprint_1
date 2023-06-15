@@ -1,0 +1,36 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:14.3
+    container_name: postgres
+    env_file:
+      - .env
+    volumes:
+      - pg:/var/lib/postgresql/data
+      - ./admin/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PORT=${DB_PORT}:5432
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+
+  admin:
+    build: admin
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    volumes:
+      - static:/app/static/
+      - media:/app/media/
+      - ./admin:/admin
+    ports:
+      - "8000:8000"
+
+volumes:
+  static:
+  media:
+  history:
+  pg:
