@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:3.11-management
+    restart:
+      always
+    environment:
+      RABBITMQ_DEFAULT_USER: rmuser
+      RABBITMQ_DEFAULT_PASS: rmpassword
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  notification_api:
+    build: notification_service
+    container_name: notification_api
+    ports:
+      - "8080:8080"
+    depends_on:
+     - rabbitmq
+    restart:
+      always
+    env_file:
+    - envs/.env
+    volumes:
+      - ./notification_service:/notification_service
