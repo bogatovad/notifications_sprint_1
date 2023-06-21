@@ -21,11 +21,14 @@ bash:
 down:
 	${COMPOSE} down
 
-BASE_COMMAND = docker-compose -f ${COMPOSE_FILE} run --rm django
-COMMAND = ${BASE_COMMAND}  /bin/bash -c
-
 superuser:
 	docker-compose run --rm admin /bin/bash -c './manage.py createsuperuser'
 
 shell:
-	docker-compose run --rm admin /bin/bash -c  './manage.py shell'
+	docker-compose run --rm admin /bin/bash -c  './manage.py shell -i python'
+
+migrations:
+	docker-compose run --rm admin /bin/bash -c './manage.py makemigrations'
+
+migrate:
+	docker-compose run --rm admin /bin/bash -c './manage.py migrate'

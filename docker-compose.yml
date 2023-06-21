@@ -23,8 +23,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - static:/app/static/
-      - media:/app/media/
+      - static:/admin/static/
+      - media:/admin/media/
       - ./admin:/admin
     ports:
       - "8000:8000"

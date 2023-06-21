@@ -11,12 +11,13 @@ COPY requirements.txt requirements.txt
 COPY wait-for-it.sh /admin/
 RUN chmod +x ./wait-for-it.sh
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
     # https://stackoverflow.com/questions/46711990/error-pg-config-executable-not-found-when-installing-psycopg2-on-alpine-in-dock \
      # https://stackoverflow.com/a/67404591
      apt-get -y install libpq-dev gcc
 
-USER usr
+RUN pip install -r requirements.txt
+
+#USER usr
 COPY . .
 EXPOSE 8000
 # https://medium.com/@krishnaregmi/wait-for-it-docker-compose-f0bac30f3357
