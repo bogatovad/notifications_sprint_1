@@ -46,7 +46,6 @@ class Notification(models.Model):
         groups_users = []
         for group in groups:
             groups_users.extend([user for user in group.user_set.all()])
-        logger.info(groups_users)
         return list(self.users.all()) + groups_users
 
     def send(self) -> Annotated[int, 'Status code']:
@@ -65,7 +64,6 @@ class Notification(models.Model):
         }
 
         response = requests.post(url, data=payload)
-        logger.info(response.json())
         return response.status_code
 
 
