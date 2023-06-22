@@ -20,12 +20,12 @@ class Template(models.Model):
     description = models.CharField('Описание шаблона', max_length=250)
     content = models.TextField('Контент шаблона', help_text='Текст шаблона письма - HTML страница или просто текст.')
 
-    def __str__(self):
-        return f'Шаблон: {self.title}, Тип: {self.event_type}'
-
     class Meta:
         verbose_name = 'Шаблон'
         verbose_name_plural = 'Шаблоны'
+
+    def __str__(self):
+        return f'Шаблон: {self.title}, Тип: {self.event_type}'
 
 
 class Notification(models.Model):
@@ -60,8 +60,6 @@ class Notification(models.Model):
 
     def send(self) -> Annotated[int, 'Status code']:
         event = self.template.event_type
-        logger.info(self.recipients)
-        emails = [user.email for user in self.recipients]
         context = {
             "names": [user.get_full_name() for user in self.recipients]
         }
