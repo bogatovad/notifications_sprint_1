@@ -30,6 +30,7 @@ class Template(models.Model):
 
 class Notification(models.Model):
     template = models.ForeignKey('Template', on_delete=models.CASCADE)
+    name = models.CharField('Название', max_length=50)
     type = models.CharField(
         'Тип рассылки',
         max_length=50,
@@ -66,9 +67,12 @@ class Notification(models.Model):
         url = settings.EVENT_URL
 
         payload = {
+            "id": self.id,
+            "name": self.name,
             "event": event,
             "context": context,
-            "receiver": self.recipients_ids
+            "receiver": self.recipients_ids,
+
         }
 
         response = requests.post(url, data=payload)
