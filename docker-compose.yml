@@ -1,12 +1,12 @@
 version: '3'
 services:
-  postgres:
+  notifications_db:
     image: postgres:14.3
-    container_name: postgres
+    container_name: notifications_db
     env_file:
       - .env
     volumes:
-      - pg:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
       - ./admin/init_db.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_DB=${DB_NAME}
@@ -21,7 +21,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
+      - notifications_db
     volumes:
       - static:/admin/static/
       - media:/admin/media/
@@ -32,4 +32,4 @@ services:
 volumes:
   static:
   media:
-  pg:
+  db:
