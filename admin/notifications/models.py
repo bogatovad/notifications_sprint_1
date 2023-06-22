@@ -33,12 +33,12 @@ class Notification(models.Model):
     users = models.ManyToManyField(User, related_name='notifications', through='NotificationToUser')
     groups = models.ManyToManyField(Group, related_name='notifications', through='NotificationToGroup')
 
-    def __str__(self):
-        return f'Уведомление: {self.template.event_type}'
-
     class Meta:
         verbose_name = 'Уведомление'
         verbose_name_plural = 'Уведомления'
+
+    def __str__(self):
+        return f'Уведомление: {self.template.event_type}'
 
     @property
     def recipients(self) -> List[User]:
@@ -59,7 +59,7 @@ class Notification(models.Model):
 
         payload = {
             "event": event,
-            "contex": context,
+            "context": context,
             "emails": emails
         }
 
