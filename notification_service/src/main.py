@@ -27,7 +27,7 @@ def shutdown():
     rabbitmq.close()
 
 
-app.include_router(router, prefix="/api/v1", tags=["sender"])
+app.include_router(router, prefix="/api/v1", tags=["publisher"])
 
 
 if __name__ == "__main__":

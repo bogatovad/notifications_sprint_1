@@ -25,7 +25,7 @@ class RabbitPublisher:
             exchange='',
             routing_key=queue_name,
             body=message,
-            properties=pika.BasicProperties(delivery_mode=2))
+            properties=pika.BasicProperties(delivery_mode= settings.rabbitmq_delivery_mode))
 
     def close(self):
         self.connection.close()
@@ -38,5 +38,4 @@ rabbitmq_broker: RabbitPublisher = RabbitPublisher(
 
 
 def get_rabbitmq() -> RabbitPublisher:
-    """Function required for dependency injection"""
     return rabbitmq_broker
