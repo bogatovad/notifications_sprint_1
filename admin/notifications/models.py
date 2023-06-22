@@ -72,7 +72,7 @@ class Notification(models.Model):
             "event": event,
             "context": context,
             "receiver": self.recipients_ids,
-
+            "type": self.type,
         }
 
         response = requests.post(url, data=payload)
