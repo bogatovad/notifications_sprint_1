@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db import models
-from notifications.enums import StatusChoice
+from notifications.enums import StatusChoice, NotificationTypeChoice
 
 User = get_user_model()
 
@@ -30,6 +30,12 @@ class Template(models.Model):
 
 class Notification(models.Model):
     template = models.ForeignKey('Template', on_delete=models.CASCADE)
+    type = models.CharField(
+        'Тип рассылки',
+        max_length=50,
+        choices=NotificationTypeChoice.choices,
+        default=NotificationTypeChoice.GROUP,
+    )
     users = models.ManyToManyField(User, related_name='notifications', through='NotificationToUser')
     groups = models.ManyToManyField(Group, related_name='notifications', through='NotificationToGroup')
 
@@ -48,6 +54,10 @@ class Notification(models.Model):
             groups_users.extend([user for user in group.user_set.all()])
         return list(self.users.all()) + groups_users
 
+    @property
+    def recipients_ids(self) -> List[Annotated[int, "User's ids"]]:
+        return [user.id for user in self.recipients]
+
     def send(self) -> Annotated[int, 'Status code']:
         event = self.template.event_type
         logger.info(self.recipients)
@@ -60,7 +70,7 @@ class Notification(models.Model):
         payload = {
             "event": event,
             "context": context,
-            "emails": emails
+            "receiver": self.recipients_ids
         }
 
         response = requests.post(url, data=payload)
