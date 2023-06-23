@@ -1,6 +1,5 @@
 import pika
 import json
-import time
 
 from core.config import settings
 from models.events import ResponseModel, RequestEventModel, UserModel
@@ -34,23 +33,23 @@ class RabbitPublisher:
 
 class RabbitWorker(RabbitPublisher):
 
-    def produce(self, event: RequestEventModel, user: UserModel):
+    @staticmethod
+    def _get_data(event, user):
         template_context = event.context['username'] = user.login
-        response_data = ResponseModel(
-        event_type=event.event,
+        return ResponseModel(
+        event_name=event.event_name,
         email=user.email,
         context=template_context
         )
-        self.send_message(queue_name=event.name, message=response_data)
+
+    def produce(self, event: RequestEventModel, user: UserModel):
+        response_data = self._get_data(event, user)
+        self.send_message(queue_name=f'email.{event.event_type}', message=response_data)
 
     def produce_many(self, event: RequestEventModel, user_list: list[UserModel]):
         for user in user_list:
-            self.send_message(queue_name=event.name,
-            message=ResponseModel(
-                event_type=event.event,
-                email=user.email,
-                context=event.context)
-            )
+            response_data = self._get_data(event, user)
+            self.send_message(queue_name=f'email.{event.event_type}', message=response_data)
 
 
 rabbitmq_worker: RabbitWorker = RabbitWorker(

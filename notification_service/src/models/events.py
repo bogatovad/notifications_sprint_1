@@ -21,18 +21,15 @@ class EventType(str, Enum):
     notice = "notice"
 
 
-class BaseEventModel(ORJSONBaseModel):
-    created_at: str = Field(default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
-
-class RequestEventModel(BaseEventModel):
+class RequestEventModel(ORJSONBaseModel):
     receiver: str | list
-    name: EventType
+    event_type: EventType
+    event_name: str #название шаблона
     type: NotificationType
     context: dict
 
 
-class ResponseModel(BaseEventModel):
+class ResponseModel(ORJSONBaseModel):
     email: str
     event_type: str
     context: dict
