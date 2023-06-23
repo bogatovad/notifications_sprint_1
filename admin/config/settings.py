@@ -140,4 +140,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EVENT_URL = env('EVENT_URL', 'https://httpbin.org/post/500')
+EVENT_URL = env('EVENT_URL')

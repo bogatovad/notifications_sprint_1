@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class Template(models.Model):
-    event_type = models.SlugField('Тип события', max_length=50, primary_key=True)
+    slug = models.SlugField('slug шаблона', max_length=50, primary_key=True)
     title = models.CharField('Заголовок', max_length=250)
     description = models.CharField('Описание шаблона', max_length=250)
     content = models.TextField('Контент шаблона', help_text='Текст шаблона письма - HTML страница или просто текст.')
@@ -25,7 +25,7 @@ class Template(models.Model):
         verbose_name_plural = 'Шаблоны'
 
     def __str__(self):
-        return f'Шаблон: {self.title}, Тип: {self.event_type}'
+        return f'Шаблон: {self.title}'
 
 
 class Notification(models.Model):
@@ -45,7 +45,7 @@ class Notification(models.Model):
         verbose_name_plural = 'Уведомления'
 
     def __str__(self):
-        return f'Уведомление: {self.template.event_type}'
+        return f'Уведомление: {self.name}'
 
     @property
     def recipients(self) -> List[User]:
@@ -60,19 +60,19 @@ class Notification(models.Model):
         return [user.id for user in self.recipients]
 
     def send(self) -> Annotated[int, 'Status code']:
-        event = self.template.event_type
         context = {
-            "names": [user.get_full_name() for user in self.recipients]
+            "title": self.template.title,
+            "text": self.template.content,
+            "username": [user.get_full_name() for user in self.recipients]
         }
         url = settings.EVENT_URL
 
         payload = {
-            "id": self.id,
-            "name": self.name,
-            "event": event,
-            "context": context,
             "receiver": self.recipients_ids,
-            "type": self.type,
+            "event_name": self.template.slug,
+            "event_type": self.name,
+            "context": context,
+
         }
 
         response = requests.post(url, data=payload)
