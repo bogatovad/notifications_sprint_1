@@ -6,13 +6,19 @@ from .base_model import ORJSONBaseModel
 
 
 class UserModel(ORJSONBaseModel):
-    name: str
+    login: str
     email: str
 
 
-class Type(str, Enum):
+class NotificationType(str, Enum):
     single = "single"
     group = "group"
+    all = 'all'
+
+
+class EventType(str, Enum):
+    welcome = "welcome"
+    notice = "notice"
 
 
 class BaseEventModel(ORJSONBaseModel):
@@ -21,6 +27,12 @@ class BaseEventModel(ORJSONBaseModel):
 
 class RequestEventModel(BaseEventModel):
     receiver: str | list
-    name: str
-    type: Type
-    body: dict
+    name: EventType
+    type: NotificationType
+    context: dict
+
+
+class ResponseModel(BaseEventModel):
+    email: str
+    event_type: str
+    context: dict

@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from sqlalchemy.orm import Session
 
-from db.models import User
+from db.models import User, Notification
 from db.postgres import SessionLocal
 from services.base_db_service import BaseDBService
 
@@ -16,7 +16,7 @@ def service_with_session(session: Session):
 
 class NotificationService(BaseDBService):
     """Сервис по работе с моделью Notification."""
-    _model = User
+    _model = Notification
 
 
 def get_notification_service() -> NotificationService:

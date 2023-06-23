@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     db_name: str = Field("postgres", env="DB_NAME")
     pg_user: str = Field("app", env="POSTGRES_USER")
-    pg_password: str = Field(env="POSTGRES_PASSWORD")
+    pg_password: str = Field("123qwe", env="POSTGRES_PASSWORD")
     pg_host: str = Field("notification_db", env="POSTGRES_HOST")
     pg_port: int = Field(5432, env="POSTGRES_PORT")
 

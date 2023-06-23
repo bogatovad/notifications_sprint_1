@@ -1,32 +1,27 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, BackgroundTasks
+from fastapi import APIRouter, Depends
 
 from models.events import RequestEventModel
-from services.publisher import RabbitPublisher, get_rabbitmq
+from services.publisher import RabbitWorker, get_rabbitmq
 from services.user_service import UserService, get_user_service
 
 
 router = APIRouter()
 
 
-def put_event_to_queue():
-    pass
-
-
 @router.post(
-    "/send-notification/{email}"
+    "/send-notification/email"
 )
-async def send_notifications(
+def send_notifications(
     event: RequestEventModel,
-    # background_task: BackgroundTasks,
-    message_service: RabbitPublisher = Depends(get_rabbitmq),
+    rabbit_worker: RabbitWorker = Depends(get_rabbitmq),
     user_service: UserService = Depends(get_user_service)
 ):
-    queue_name = f'email.{event.name}'
     if event.type == 'single':
-        message_service.send_message(queue_name, event.data)
+        user = user_service.find_one(id=event.receiver)
+        rabbit_worker.produce(event, user) 
     else:
-        for user_id in event.receiver:
-            message_service.send_message(queue_name, event.data)
-    return HTTPStatus.OK
+        user_list = user_service.get_users(event.receiver)
+        rabbit_worker.produce_many(event, user_list)   
+    return HTTPStatus.ACCEPTED
