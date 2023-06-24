@@ -20,5 +20,5 @@ RUN chmod +x entrypoint.sh
 
 USER notification_service
 
-ENTRYPOINT ["sh", "entrypoint.sh"]
+#ENTRYPOINT ["sh", "entrypoint.sh"]
 CMD ["python", "src/main.py"]

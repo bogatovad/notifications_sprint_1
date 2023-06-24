@@ -160,8 +160,6 @@ static/
 
 rabbitmq/
 
-.erlang.cookie
 
 mongo/
-ugc/.bash_history
 rabbitmq

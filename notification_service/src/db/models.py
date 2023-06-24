@@ -7,12 +7,14 @@ from models.events import UserModel
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "auth_user"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
-    login = Column(String, unique=True, nullable=False)
+    username = Column(String, unique=True, nullable=False)
     email = Column(String(255), unique=True)
     
     @property
     def serialize(self):
-        return UserModel(login=self.login, email=self.email)
+        return UserModel(login=self.username, email=self.email)
+    
+    __table_args__ = {"schema": "public"}
