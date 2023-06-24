@@ -15,7 +15,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 EXPOSE 8000
-#CMD ./wait-for-it.sh ${POSTGRES_HOST}:${POSTGRES_PORT} \
-CMD python manage.py collectstatic --noinput \
+CMD ./wait-for-it.sh ${POSTGRES_HOST}:${POSTGRES_PORT} \
+    &&python manage.py collectstatic --noinput \
     && python manage.py migrate \
     && gunicorn config.wsgi --bind 0.0.0.0:8000 --reload
