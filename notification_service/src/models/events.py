@@ -1,17 +1,19 @@
 from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel, Field
+from typing import Any
 
 from .base_model import ORJSONBaseModel
 
 
 class UserModel(ORJSONBaseModel):
-    login: str
+    id: int # вернуть uuid
+    username: str
     email: str
 
 
 class NotificationType(str, Enum):
-    single = "single"
+    single = "personal"
     group = "group"
     all = 'all'
 
@@ -32,4 +34,4 @@ class RequestEventModel(ORJSONBaseModel):
 class ResponseModel(ORJSONBaseModel):
     email: str
     event_type: str
-    context: dict
+    context: dict | str

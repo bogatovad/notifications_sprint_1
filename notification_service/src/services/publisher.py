@@ -19,7 +19,7 @@ class RabbitPublisher:
         self.channel = self.connection.channel()
         
     def send_message(self, queue_name: str, message: ResponseModel):
-        message = json.dumps({'message': message})
+        message = message.json()
         self.channel.queue_declare(queue=queue_name, durable=True)
         self.channel.basic_publish(
             exchange='',
@@ -35,11 +35,11 @@ class RabbitWorker(RabbitPublisher):
 
     @staticmethod
     def _get_data(event, user):
-        template_context = event.context['username'] = user.login
+        event.context['username'] = user.username
         return ResponseModel(
-        event_name=event.event_name,
+        event_type=event.event_name,
         email=user.email,
-        context=template_context
+        context=event.context
         )
 
     def produce(self, event: RequestEventModel, user: UserModel):

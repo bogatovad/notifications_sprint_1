@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from models.events import RequestEventModel
 from services.publisher import RabbitWorker, get_rabbitmq
@@ -13,12 +13,12 @@ router = APIRouter()
 @router.post(
     "/send-notification/email"
 )
-def send_notifications(
+async def send_notifications(
     event: RequestEventModel,
     rabbit_worker: RabbitWorker = Depends(get_rabbitmq),
     user_service: UserService = Depends(get_user_service)
 ):
-    if event.type == 'single':
+    if event.type == 'personal':
         user = user_service.find_one(id=event.receiver)
         rabbit_worker.produce(event, user) 
     else:

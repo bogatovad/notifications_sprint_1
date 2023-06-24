@@ -1,4 +1,5 @@
 #!/bin/bash
+
 wait_for_service() {
   local name="$1" host="$2" port="$3" retry_interval="$4"
   echo "Waiting for $name..."

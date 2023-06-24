@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Annotated, List
 
@@ -48,7 +49,7 @@ class Notification(models.Model):
         return f'Уведомление: {self.name}'
 
     @property
-    def recipients(self) -> List[User]:
+    def recipients(self) -> User | List[User]:
         groups = self.groups.all()
         groups_users = []
         for group in groups:
@@ -56,7 +57,9 @@ class Notification(models.Model):
         return list(self.users.all()) + groups_users
 
     @property
-    def recipients_ids(self) -> List[Annotated[int, "User's ids"]]:
+    def recipients_ids(self) -> int | List[Annotated[int, "User's ids"]]:
+        if len(self.recipients) == 1:
+            return self.recipients[0].id
         return [user.id for user in self.recipients]
 
     def send(self) -> Annotated[int, 'Status code']:
@@ -72,10 +75,11 @@ class Notification(models.Model):
             "event_name": self.template.slug,
             "event_type": self.name,
             "context": context,
+            "type": self.type
 
         }
 
-        response = requests.post(url, data=payload)
+        response = requests.post(url, data=json.dumps(payload))
         return response.status_code
 
 
