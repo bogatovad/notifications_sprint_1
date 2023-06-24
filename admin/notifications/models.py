@@ -57,21 +57,21 @@ class Notification(models.Model):
         return list(self.users.all()) + groups_users
 
     @property
-    def recipients_ids(self) -> int | List[Annotated[int, "User's ids"]]:
-        if len(self.recipients) == 1:
-            return self.recipients[0].id
-        return [user.id for user in self.recipients]
+    def recipients_ids(self) -> List[Annotated[str, "User's ids"]]:
+        return [str(user.id) for user in self.recipients]
 
     def send(self) -> Annotated[int, 'Status code']:
+        ids = self.recipients_ids if self.type == NotificationTypeChoice.GROUP else self.recipients_ids[0]
+        usernames = [user.get_full_name() for user in self.recipients]
         context = {
             "title": self.template.title,
             "text": self.template.content,
-            "username": [user.get_full_name() for user in self.recipients]
+            "username": usernames if self.type == NotificationTypeChoice.GROUP else usernames[0],
         }
         url = settings.EVENT_URL
 
         payload = {
-            "receiver": self.recipients_ids,
+            "receiver": ids,
             "event_name": self.template.slug,
             "event_type": self.name,
             "context": context,
@@ -79,7 +79,7 @@ class Notification(models.Model):
 
         }
 
-        response = requests.post(url, data=json.dumps(payload))
+        response = requests.post(url, json=payload)
         return response.status_code
 
 

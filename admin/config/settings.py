@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'notifications',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EVENT_URL = env('EVENT_URL')
+AUTH_USER_MODEL = 'users.User'
