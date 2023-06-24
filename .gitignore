@@ -157,3 +157,9 @@ static/
 /docker_compose/simple_project/.idea/
 /data/
 /etl/storage.json
+
+rabbitmq/
+
+
+mongo/
+rabbitmq
