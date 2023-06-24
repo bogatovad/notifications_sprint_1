@@ -40,5 +40,36 @@ services:
     ports:
       - 5432:5432
 
+  notifications_db_1:
+    image: postgres:14.3
+    container_name: notifications_db
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./admin/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PORT=${DB_PORT}:5432
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+
+  admin:
+    build: admin
+    env_file:
+      - .env
+    depends_on:
+      - notifications_db
+    volumes:
+      - static:/admin/static/
+      - media:/admin/media/
+      - ./admin:/admin
+    ports:
+      - "8000:8000"
+
 volumes:
+  static:
+  media:
   db:

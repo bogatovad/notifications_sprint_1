@@ -4,7 +4,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/*
+notifications_sprint_11/.idea/vcs.xml
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
@@ -147,19 +147,20 @@ celerybeat-schedule
 
 # Virtual env
 venv/
-venv
 
 # media & static
 media/
 static/
 
-.idea/
-/.idea/*
-.local
-.idea/
-/.idea/*
-.local
+*.idea/
+/docker_compose/.idea/
+/docker_compose/simple_project/.idea/
+/data/
+/etl/storage.json
 
+rabbitmq/
+
+.erlang.cookie
 
 mongo/
 ugc/.bash_history
