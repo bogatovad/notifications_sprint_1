@@ -77,7 +77,7 @@ class Notification(models.Model):
 
         }
 
-        response = requests.post(url, data=payload)
+        response = requests.post(url, json=payload)
         return response.status_code
 
 
