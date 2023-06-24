@@ -60,14 +60,14 @@ class Notification(models.Model):
         return [str(user.id) for user in self.recipients]
 
     def send(self) -> Annotated[int, 'Status code']:
+        ids = self.recipients_ids if self.type == NotificationTypeChoice.GROUP else self.recipients_ids[0]
+        usernames = [user.get_full_name() for user in self.recipients]
         context = {
             "title": self.template.title,
             "text": self.template.content,
-            "username": [user.get_full_name() for user in self.recipients]
+            "username": usernames if self.type == NotificationTypeChoice.GROUP else usernames[0],
         }
         url = settings.EVENT_URL
-
-        ids = self.recipients_ids if len(self.recipients_ids) > 1 else self.recipients_ids[0]
 
         payload = {
             "receiver": ids,
