@@ -56,8 +56,8 @@ class Notification(models.Model):
         return list(self.users.all()) + groups_users
 
     @property
-    def recipients_ids(self) -> List[Annotated[int, "User's ids"]]:
-        return [user.id for user in self.recipients]
+    def recipients_ids(self) -> List[Annotated[str, "User's ids"]]:
+        return [str(user.id) for user in self.recipients]
 
     def send(self) -> Annotated[int, 'Status code']:
         context = {
@@ -67,8 +67,10 @@ class Notification(models.Model):
         }
         url = settings.EVENT_URL
 
+        ids = self.recipients_ids if len(self.recipients_ids) > 1 else self.recipients_ids[0]
+
         payload = {
-            "receiver": self.recipients_ids,
+            "receiver": ids,
             "event_name": self.template.slug,
             "event_type": self.name,
             "context": context,
