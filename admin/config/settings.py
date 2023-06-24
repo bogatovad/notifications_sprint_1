@@ -90,7 +90,7 @@ DATABASES = {
         'HOST': env('POSTGRES_HOST', 'notifications_db'),
         'PORT': env('POSTGRES_PORT', 5432),
         'OPTIONS': {
-           'options': '-c search_path=public,notifications'
+           'options': '-c search_path=public'
         }
     }
 }

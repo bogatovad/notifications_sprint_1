@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
@@ -9,8 +9,7 @@ from models.events import UserModel
 class User(Base):
     __tablename__ = "auth_user"
 
-    #id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4()) # вернуть uuid
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4()) 
     username = Column(String, unique=True, nullable=False)
     email = Column(String(255), unique=True)
     
