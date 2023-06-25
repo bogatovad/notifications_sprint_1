@@ -1,8 +1,8 @@
-name: notification service workflow
+name: notification_service_workflow
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, ci/cd ]
 
 
 jobs:
@@ -44,9 +44,9 @@ jobs:
         name: reports
         path: reports/
 
-    - name: Send notification
+    - name: Send report
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: ${{ github.workflow }} succeed! # сам отчет
+        message: $Pipeline {{ github.head_ref }} for {{ github.sha }} finished! 
