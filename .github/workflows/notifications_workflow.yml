@@ -1,0 +1,52 @@
+name: notification service workflow
+
+on:
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        version: [ 3.8, 3.9 ]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python  ${{ matrix.version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version:  ${{ matrix.version }}
+
+    - name: Create directories
+      run: |
+        mkdir -p reports/admin/wemake-python-styleguide/
+        mkdir -p reports/notification_service/wemake-python-styleguide/
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r admin/requirements.txt -r notification_service/requirements.txt
+
+    - name: Check code quality
+      run: |
+        pip install flake8-html wemake-python-styleguide
+        flake8 admin --exit-zero --format=html --htmldir=reports/admin/wemake-python-styleguide/flake-report
+        flake8 notification_service/src --exit-zero --format=html --htmldir=reports/notification_service/wemake-python-styleguide/flake-report
+
+    - name: load reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: reports
+        path: reports/
+
+    - name: Send notification
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: ${{ github.workflow }} succeed! # сам отчет
