@@ -15,7 +15,7 @@ app = FastAPI(
 )
 
 
-@app.on_event('startup')
+@app.on_event("startup")
 def startup():
     rabbitmq_publisher = get_rabbitmq()
     rabbitmq_publisher.connect()

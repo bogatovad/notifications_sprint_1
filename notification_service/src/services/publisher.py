@@ -7,54 +7,59 @@ from models.events import ResponseModel, RequestEventModel, UserModel
 
 class RabbitPublisher:
     def __init__(self, rabbitmq_host: str, rabbitmq_port: int):
-        self.credentials = pika.PlainCredentials(settings.rabbitmq_user, settings.rabbitmq_password)
-        self.host=rabbitmq_host
-        self.port=rabbitmq_port
+        self.credentials = pika.PlainCredentials(
+            settings.rabbitmq_user, settings.rabbitmq_password
+        )
+        self.host = rabbitmq_host
+        self.port = rabbitmq_port
         self.connection = None
 
     def connect(self):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.host, 
-                                                                             port=self.port,
-                                                                             credentials=self.credentials))
+        self.connection = pika.BlockingConnection(
+            pika.ConnectionParameters(
+                host=self.host, port=self.port, credentials=self.credentials
+            )
+        )
         self.channel = self.connection.channel()
-        
+
     def send_message(self, queue_name: str, message: ResponseModel):
         message = message.json()
         self.channel.queue_declare(queue=queue_name, durable=True)
         self.channel.basic_publish(
-            exchange='',
+            exchange="",
             routing_key=queue_name,
             body=message,
-            properties=pika.BasicProperties(delivery_mode= settings.rabbitmq_delivery_mode))
+            properties=pika.BasicProperties(
+                delivery_mode=settings.rabbitmq_delivery_mode
+            ),
+        )
 
     def close(self):
         self.connection.close()
 
 
 class RabbitWorker(RabbitPublisher):
-
     @staticmethod
     def _get_data(event, user):
-        event.context['username'] = user.username
+        event.context["username"] = user.username
         return ResponseModel(
-        event_type=event.event_name,
-        email=user.email,
-        context=event.context
+            event_type=event.event_name, email=user.email, context=event.context
         )
 
     def produce(self, event: RequestEventModel, user: UserModel):
         response_data = self._get_data(event, user)
-        self.send_message(queue_name=f'email.{event.event_type}', message=response_data)
+        self.send_message(queue_name=f"email.{event.event_type}", message=response_data)
 
     def produce_many(self, event: RequestEventModel, user_list: list[UserModel]):
         for user in user_list:
             response_data = self._get_data(event, user)
-            self.send_message(queue_name=f'email.{event.event_type}', message=response_data)
+            self.send_message(
+                queue_name=f"email.{event.event_type}", message=response_data
+            )
 
 
 rabbitmq_worker: RabbitWorker = RabbitWorker(
-    settings.rabbitmq_host,
-    settings.rabbitmq_port
+    settings.rabbitmq_host, settings.rabbitmq_port
 )
 
 

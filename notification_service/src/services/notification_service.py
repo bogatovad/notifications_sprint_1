@@ -16,6 +16,7 @@ def service_with_session(session: Session):
 
 class NotificationService(BaseDBService):
     """Сервис по работе с моделью Notification."""
+
     _model = Notification
 
 
