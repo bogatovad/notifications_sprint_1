@@ -2,7 +2,6 @@ import os
 import smtplib
 import uuid
 from email.message import EmailMessage
-from enum import Enum
 
 from celery import Celery
 from exceptions import TemplateNotExist
@@ -11,6 +10,8 @@ from notification_store import init_ch_connection
 from settings import DATA_TO_TEMPLATE, EMAIL, EVENT_TO_TEMPLATE, settings
 
 from worker.enums import STATUS
+import json
+
 
 broker_url = "amqp://rmuser:rmpassword@rabbitmq_service"
 redis_url = "redis://redis"
@@ -28,11 +29,13 @@ def create_base_message():
     return message
 
 
-def render_template(event):
+def render_template(message_dict):
     """Генерация шаблона для отправки письма."""
     current_path = os.path.dirname(__file__)
     loader = FileSystemLoader(current_path)
     env = Environment(loader=loader)
+
+    event = message_dict.get("event")
 
     if event not in EVENT_TO_TEMPLATE or event not in DATA_TO_TEMPLATE:
         raise TemplateNotExist
@@ -60,13 +63,14 @@ def save_notification(data_message: dict[str, str]) -> None:
     ch_client.execute(query)
 
 
-def send_message(message):
+def send_message(message_dict):
     """Функция для отправки сообщения."""
     server = init_smtp()
     message = message.as_string()
+    email = message_dict.get("email")
 
     try:
-        server.sendmail(EMAIL, [EMAIL], message)
+        server.sendmail(EMAIL, [email], message)
     except smtplib.SMTPException:
         status = STATUS.FAIL.value
     else:
@@ -77,6 +81,8 @@ def send_message(message):
             "status": status,
             "context": message,
         }
+
+        # Сохраняем данные в clickhouse.
         save_notification(data_message)
         server.close()
 
@@ -84,9 +90,10 @@ def send_message(message):
 @app.task
 def send(body):
     """Таска для отправки сообщения."""
-    event = body.decode("utf-8")
-    output = render_template(event)
+    message = body.decode("utf-8")
+    message_dict = json.loads(message)
+    output = render_template(message_dict)
     message = create_base_message()
     message.add_alternative(output, subtype="html")
 
-    send_message(message)
+    send_message(message_dict)

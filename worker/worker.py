@@ -1,5 +1,4 @@
 import pika
-from clickhouse_driver import Client
 from notification_store import init_ch_connection, init_clickhouse_db
 from tasks import send
 
