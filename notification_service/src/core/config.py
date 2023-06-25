@@ -17,21 +17,19 @@ class Settings(BaseSettings):
     pg_host: str = Field("notifications_db", env="POSTGRES_HOST")
     pg_port: int = Field(5432, env="POSTGRES_PORT")
 
-    rabbitmq_host: str = Field('rabbitmq', env="RABBITMQ_HOST")
+    rabbitmq_host: str = Field("rabbitmq", env="RABBITMQ_HOST")
     rabbitmq_port: int = Field(5672, env="RABBITMQ_PORT")
-    rabbitmq_user: str = Field('rmuser', env="RABBITMQ_USER")
+    rabbitmq_user: str = Field("rmuser", env="RABBITMQ_USER")
     rabbitmq_password: str = Field(env="RABBITMQ_PASSWORD")
     rabbitmq_delivery_mode: int = Field(2, env="RABBITMQ_DELIVERY_MODE")
 
     class Config:
         env_file = "envs/.env"
 
-
     @property
     def db_uri(self):
         """Возвращает URI базы данных."""
-        return f"postgresql://{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.db_name}" 
-
+        return f"postgresql://{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.db_name}"
 
 
 settings = Settings()

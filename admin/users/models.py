@@ -7,4 +7,4 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     class Meta:
-        db_table = 'auth_user'
+        db_table = "auth_user"

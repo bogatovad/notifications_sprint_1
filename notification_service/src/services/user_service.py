@@ -16,8 +16,9 @@ def service_with_session(session: Session):
 
 class UserService(BaseDBService):
     """Сервис по работе с моделью User."""
+
     _model = User
-    
+
     def find_one(self, **kwargs):
         db_user = self._session.query(self._model).filter_by(**kwargs).first()
         return db_user.serialize
@@ -26,7 +27,9 @@ class UserService(BaseDBService):
         if not user_list:
             db_users = self._session.query(self._model).all()
         else:
-            db_users = self._session.query(self._model).filter(self._model.id.in_(user_list))
+            db_users = self._session.query(self._model).filter(
+                self._model.id.in_(user_list)
+            )
         return [item.serialize for item in db_users]
 
 

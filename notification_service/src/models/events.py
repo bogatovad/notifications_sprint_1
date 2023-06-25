@@ -15,7 +15,7 @@ class UserModel(ORJSONBaseModel):
 class NotificationType(str, Enum):
     single = "personal"
     group = "group"
-    all = 'all'
+    all = "all"
 
 
 class EventType(str, Enum):
@@ -27,7 +27,7 @@ class EventType(str, Enum):
 class RequestEventModel(ORJSONBaseModel):
     receiver: str | list
     event_type: EventType
-    event_name: str #название шаблона
+    event_name: str  # название шаблона
     type: NotificationType
     context: dict
 
