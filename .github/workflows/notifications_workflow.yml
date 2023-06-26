@@ -49,4 +49,4 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: "Pipeline {{ github.head_ref }} for {{ github.sha }} finished!"
+        message: "{{ github.workflow }}: pipeline {{ github.head_ref }} for {{ github.sha }} finished!"
