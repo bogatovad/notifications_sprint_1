@@ -76,7 +76,7 @@ curl --location --request GET '127.0.0.1:8080/api/v1/send-notification/email' \
     "receiver": "9de57835-28b7-4cc7-be46-95a0fb1b17c1",
     "event_name": "statistic",
     "type": "personal",
-    "context": {"title": "new_title"}
+    "context": {"title": "new_films", "email": "ivan@yandex.ru", films: [{"id": 1, "title": ..., "date":..., "description": ...}]}
 }'
 ```
 
