@@ -19,8 +19,8 @@
             <quota>default</quota>
         </default>
         <admin>
-            <password>123</password>
-            <profile>default</profile>
+            <password>adminsupersecret</password>
+            <profile>s1@#!$fgtt44@@3434!@#$%JDMDmsmsmj84</profile>
             <networks>
                 <ip>::/0</ip>
             </networks>

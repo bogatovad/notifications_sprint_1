@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends
-
 from models.events import RequestEventModel
 from services.publisher import RabbitWorker, get_rabbitmq
 from services.user_service import UserService, get_user_service

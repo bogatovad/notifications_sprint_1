@@ -1,8 +1,7 @@
 from logging import config as logging_config
 
-from pydantic import BaseSettings, Field
-
 from core.logger import LOGGING
+from pydantic import BaseSettings, Field
 
 logging_config.dictConfig(LOGGING)
 
@@ -31,7 +30,7 @@ class Settings(BaseSettings):
     @property
     def db_uri(self):
         return f"postgresql+asyncpg://{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.db_name}"
-    
+
     @property
     def rabbit_connection(self):
         return f"amqp://{self.rabbitmq_user}:{self.rabbitmq_password}@{self.rabbitmq_host}/"

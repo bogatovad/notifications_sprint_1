@@ -1,6 +1,5 @@
 import orjson
 from aio_pika import Message, connect
-
 from core.config import settings
 from models.events import RequestEventModel, ResponseModel, UserModel
 

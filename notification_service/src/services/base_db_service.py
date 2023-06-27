@@ -1,10 +1,6 @@
-from sqlalchemy.orm import Session
+from db.postgres import Base
 from sqlalchemy.ext.asyncio import AsyncSession
-from db.postgres import Base
-
-from db.postgres import Base
-
-from db.postgres import Base
+from sqlalchemy.orm import Session
 
 
 class BaseDBService:

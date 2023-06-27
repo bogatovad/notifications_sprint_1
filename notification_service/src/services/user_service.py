@@ -1,11 +1,10 @@
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-
 from db.models import User
 from db.postgres import async_session
+from fastapi import Depends
 from models.events import UserModel
 from services.base_db_service import BaseDBService
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def get_session() -> AsyncSession:
@@ -27,7 +26,9 @@ class UserService(BaseDBService):
         if not user_list:
             result = await self._session.execute(select(self._model))
         else:
-            result = await self._session.execute(select(self._model).filter(self._model.id.in_(user_list)))
+            result = await self._session.execute(
+                select(self._model).filter(self._model.id.in_(user_list))
+            )
         db_users = result.scalars().all()
         return [item.serialize for item in db_users]
 
