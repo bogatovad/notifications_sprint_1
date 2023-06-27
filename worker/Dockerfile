@@ -11,4 +11,7 @@ RUN pip install --upgrade pip \
 
 
 COPY . .
-CMD [ "python", "worker.py"]
+COPY wait_for_rabbit.sh /worker
+RUN chmod +x ./wait_for_rabbit.sh
+
+CMD ./wait_for_rabbit.sh rabbitmq:5672 && python worker.py

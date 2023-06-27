@@ -1,9 +1,9 @@
+
 from aio_pika import connect, Message
-import json
 import orjson
 
 from core.config import settings
-from models.events import ResponseModel, RequestEventModel, UserModel
+from models.events import RequestEventModel, ResponseModel, UserModel
 
 
 class RabbitPublisher:
