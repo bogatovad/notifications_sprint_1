@@ -59,7 +59,7 @@ services:
     build: worker
     image: worker
     volumes:
-      - .worker/:/app
+      - ./worker/:/app
 
   redis:
     image: redis:latest
