@@ -1,11 +1,9 @@
-from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
 import uvicorn
-
 from api.v1.event_publisher import router
 from core.config import settings
+from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from services.publisher import get_rabbitmq
-
 
 app = FastAPI(
     title=settings.project_name,

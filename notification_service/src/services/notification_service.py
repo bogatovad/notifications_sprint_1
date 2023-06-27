@@ -1,9 +1,9 @@
 from contextlib import contextmanager
-from sqlalchemy.orm import Session
 
-from db.models import User, Notification
+from db.models import Notification, User
 from db.postgres import SessionLocal
 from services.base_db_service import BaseDBService
+from sqlalchemy.orm import Session
 
 
 @contextmanager
