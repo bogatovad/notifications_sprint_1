@@ -1,9 +1,9 @@
-from sqlalchemy import Column, String
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
 from db.postgres import Base
 from models.events import UserModel
+from sqlalchemy import Column, String
+from sqlalchemy.dialects.postgresql import UUID
 
 
 class User(Base):

@@ -4,6 +4,7 @@ from settings import settings
 
 class Store:
     """Класс для взаимодействия с хранилищем уведомлений."""
+
     def __init__(self):
         self.client = Client(host=settings.clickhouse_host)
 

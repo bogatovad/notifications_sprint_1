@@ -1,47 +1,49 @@
 import uuid
 
 import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
-from settings import settings
 from enums import Status
+from settings import settings
+from sib_api_v3_sdk.rest import ApiException
 from store import Store
+from template_manager import TemplateRenderManager
 
 
 class SendMessageManager:
     """Класс управляет рассылками по электронной почте."""
+
     def __init__(self) -> None:
         self.configuration = sib_api_v3_sdk.Configuration()
-        self.configuration.api_key['api-key'] = settings.api_key_email
-        self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(self.configuration))
+        self.configuration.api_key["api-key"] = settings.api_key_email
+        self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+            sib_api_v3_sdk.ApiClient(self.configuration)
+        )
         self.store = Store()
+        self.template_render = TemplateRenderManager()
 
-    def send(self, html_content: str) -> bool:
-        subject = "Новые фильмы"
-        sender = {"name": "NotificationService", "email": "notification@yandex.ru"}
-        to = [
-            {"email": "ArtembBogatov@yandex.ru", "name": "Jane Doe"}
-        ]
+    def send(self, message: dict) -> bool:
+        subject = "Уведомление от сервиса notification service."
+        to_send, from_send = self._prepare_data_for_message(message)
         notification_id = str(uuid.uuid4())
         status = None
+        context = self.template_render.render_template(message)
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-            to=to,
-            html_content=html_content,
-            sender=sender,
-            subject=subject
+            to=to_send, html_content=context, sender=from_send, subject=subject
         )
         try:
             self.api_instance.send_transac_email(send_smtp_email)
             status = Status.SUCCESS.value
         except ApiException as e:
             status = Status.FAIL.value
-            print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
             return False
-
-        data_clickhouse = {
-            "id": notification_id,
-            "status": status,
-            "context": html_content
-        }
-        self.store.save_notification(data_clickhouse)
+        self.store.save_notification(
+            {"id": notification_id, "status": status, "context": context}
+        )
         return True
 
+    @staticmethod
+    def _prepare_data_for_message(message):
+        email = message.get("email")
+        name = email.split("@")[0]
+        to_send = [{"email": email, "name": name}]
+        from_send = {"name": settings.sender_name, "email": settings.sender_email}
+        return to_send, from_send

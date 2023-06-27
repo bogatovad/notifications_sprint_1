@@ -10,12 +10,14 @@ class Settings(BaseSettings):
     smtp_host: str = Field(..., env="SMTP_HOST")
     smtp_port: str = Field(..., env="SMTP_PORT")
     ampq_url: str = Field(..., env="AMQP_URL")
-    api_key_email: str = Field(..., env='API_KEY_EMAIL')
-    clickhouse_host: str = Field(..., env='CLICKHOUSE_HOST')
-    rm_user: str = Field(..., env='RABBIT_USER')
-    rm_password: str = Field(..., env='RABBIT_PASSWORD')
-    rabbit_host: str = Field(..., env='RABBIT_HOST')
-    rabbit_port: int = Field(..., env='RABBIT_PORT')
+    api_key_email: str = Field(..., env="API_KEY_EMAIL")
+    clickhouse_host: str = Field(..., env="CLICKHOUSE_HOST")
+    rm_user: str = Field(..., env="RABBIT_USER")
+    rm_password: str = Field(..., env="RABBIT_PASSWORD")
+    rabbit_host: str = Field(..., env="RABBIT_HOST")
+    rabbit_port: int = Field(..., env="RABBIT_PORT")
+    sender_name: str = Field(..., env="SENDER_NAME")
+    sender_email: str = Field(..., env="SENDER_EMAIL")
 
     class Config:
         env_file = ".env"
@@ -27,19 +29,5 @@ EVENT_TO_TEMPLATE = {
     "NEW_FILMS": os.path.join(TEMPLATES_DIR, "new_film.html"),
 }
 
-DATA_TO_TEMPLATE = {
-    "registration": {
-        "title": "Новое письмо!",
-        "text": "Произошло что-то интересное! :)",
-        "image": "https://pictures.s3.yandex.net:443/resources/news_1682073799.jpeg",
-    },
-    "NEW_FILMS": {
-        "title": "Новое письмо!",
-        "text": "Произошло что-то интересное! :)",
-        "image": "https://pictures.s3.yandex.net:443/resources/news_1682073799.jpeg",
-    },
-}
-
 settings = Settings()
-
 EMAIL = f"{settings.login}@{settings.domain}"

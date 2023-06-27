@@ -1,5 +1,5 @@
-from store import Store
 from rabbit_client import RabbitMq
+from store import Store
 
 
 def main():

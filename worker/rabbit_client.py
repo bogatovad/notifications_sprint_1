@@ -1,25 +1,25 @@
 import pika
+from names_queue import NEW_FILMS_QUEUE, SEND_WELCOME_QUEUE
 from settings import settings
 from tasks import send
-from names_queue import SEND_WELCOME_QUEUE, NEW_FILMS_QUEUE
 
 
 class RabbitMq:
     """Класс для взаимодействия с очередью сообщений."""
+
     def __init__(self) -> None:
         self.credentials = pika.PlainCredentials(settings.rm_user, settings.rm_password)
         self.connect = pika.SelectConnection(
             parameters=pika.ConnectionParameters(
                 host=settings.rabbit_host,
                 port=settings.rabbit_port,
-                credentials=self.credentials
+                credentials=self.credentials,
             ),
             on_open_callback=self._on_open,
         )
 
     def run(self) -> None:
         try:
-            print('Слушаю очередь!!')
             self.connect.ioloop.start()
         except KeyboardInterrupt:
             self.connect.close()

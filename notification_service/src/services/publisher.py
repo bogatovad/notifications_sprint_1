@@ -1,8 +1,8 @@
-import pika
 import json
 
+import pika
 from core.config import settings
-from models.events import ResponseModel, RequestEventModel, UserModel
+from models.events import RequestEventModel, ResponseModel, UserModel
 
 
 class RabbitPublisher:
