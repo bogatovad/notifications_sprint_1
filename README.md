@@ -57,15 +57,24 @@
 
 ---
 
-## Пример запроса для Notification Service
+## Отправка уведомления из других сервисов
+Отправляем запрос, например с такими данными
+```
+{
+    "receiver": "9de57835-28b7-4cc7-be46-95a0fb1b17c1",
+    "event_name": "statistic",
+    "type": "personal",
+    "context": {"title": "new_films", "email": "ivan@yandex.ru", films: [{"id": 1, "title": ..., "date":..., "description": ...}]}
+}
+```
+
 ```
 curl --location --request GET '127.0.0.1:8080/api/v1/send-notification/email' \
 --header 'Content-Type: application/json' \
 --header 'Cookie: csrftoken=mKjF1tJ1h0WVkk9XM99EP2MAqP8i8cdSDAmcEBVhFsSxuIXaS3ROG87umafmJqcF' \
 --data '{
     "receiver": "9de57835-28b7-4cc7-be46-95a0fb1b17c1",
-    "event_name": "welcome",
-    "event_type": "welcome",
+    "event_name": "statistic",
     "type": "personal",
     "context": {"title": "new_title"}
 }'
