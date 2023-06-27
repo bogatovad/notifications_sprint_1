@@ -1,4 +1,5 @@
 import uuid
+from typing import Tuple
 
 import sib_api_v3_sdk
 from enums import Status
@@ -41,7 +42,9 @@ class SendMessageManager:
         return True
 
     @staticmethod
-    def _prepare_data_for_message(message):
+    def _prepare_data_for_message(
+        message: dict,
+    ) -> Tuple[list[dict[str, str]], dict[str, str]]:
         email = message.get("email")
         name = email.split("@")[0]
         to_send = [{"email": email, "name": name}]

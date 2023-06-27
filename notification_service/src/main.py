@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
 
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-import uvicorn
 
 from api.v1.event_publisher import router
 from core.config import settings

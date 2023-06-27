@@ -5,21 +5,21 @@ from settings import settings
 class Store:
     """Класс для взаимодействия с хранилищем уведомлений."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = Client(host=settings.clickhouse_host)
 
-    def create_db_notification(self):
+    def create_db_notification(self) -> None:
         self.client.execute(
             f"CREATE DATABASE IF NOT EXISTS notification",
         )
 
-    def create_table_notification(self):
+    def create_table_notification(self) -> None:
         self.client.execute(
             "CREATE TABLE IF NOT EXISTS notification.regular_table "
             "(id String, status String, context String) Engine=MergeTree() ORDER BY id"
         )
 
-    def init_db(self):
+    def init_db(self) -> None:
         self.create_db_notification()
         self.create_table_notification()
 
