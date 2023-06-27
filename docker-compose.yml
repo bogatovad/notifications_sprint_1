@@ -39,8 +39,8 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
       - ./admin/init_db.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - 5432:5432
+    expose:
+      - 5432
 
   admin:
     build: admin
@@ -63,8 +63,8 @@ services:
 
   redis:
     image: redis:latest
-    ports:
-      - "6379:6379"
+    expose:
+      - 6379
 
   celery:
     image: worker
@@ -82,9 +82,9 @@ services:
     image: clickhouse/clickhouse-server
     container_name: clickhouse-node1
     hostname: clickhouse-node1
-    ports:
-      - "8123:8123"
-      - "9000:9000"
+    expose:
+      - 8123
+      - 9000
     volumes:
       - ./worker/clickhouse/node1:/etc/clickhouse-server
     depends_on:

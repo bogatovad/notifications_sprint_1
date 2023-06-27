@@ -1,4 +1,8 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from db.postgres import Base
+
+from db.postgres import Base
 
 from db.postgres import Base
 
@@ -8,9 +12,5 @@ class BaseDBService:
 
     _model = Base
 
-    def __init__(self, session: Session) -> None:
+    def __init__(self, session: AsyncSession):
         self._session = session
-
-    def close(self) -> None:
-        """Завершает работу сервиса."""
-        self._session.close()
