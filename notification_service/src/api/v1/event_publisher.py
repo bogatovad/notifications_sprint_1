@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 
 from models.events import RequestEventModel
 from services.publisher import RabbitWorker, get_rabbitmq
@@ -18,7 +18,7 @@ async def send_notifications(
 ):
     if event.type == "personal":
         user = user_service.find_one(id=event.receiver)
-        rabbit_worker.produce(event, user)
+        await rabbit_worker.produce(event, user)
     else:
         user_list = user_service.get_users(event.receiver)
         rabbit_worker.produce_many(event, user_list)
