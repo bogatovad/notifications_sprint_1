@@ -11,7 +11,7 @@
 - `make build`
 
 ### Для создания суперпользователя:
-make superuser
+- `make superuser`
 
 ## Схема сервиса
 ![](schemas/schema.png?raw=true "Схема сервиса")
