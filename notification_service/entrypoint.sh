@@ -1,14 +1,10 @@
-#!/bin/bash
+#!usr/bin/env bash
 
-wait_for_service() {
-  local name="$1" host="$2" port="$3" retry_interval="$4"
-  echo "Waiting for $name..."
-  while ! nc -z $host $port; do
-    sleep $retry_interval
-  done
-  echo "$name started"
-}
+echo "RabbitMQ not yet run..."
+# Проверяем доступность хоста и порта
+while ! nc -z $RABBIT_HOST $RABBIT_PORT; do
+  sleep 0.1
+done
+echo "RabbitMQ did run."
 
-wait_for_service "RabbitMQ" $RABBITMQ_HOST $RABBITMQ_PORT 0.5
-
-exec "$@"
+gunicorn main:app --bind 0.0.0.0:8000 -k uvicorn.workers.UvicornWorker

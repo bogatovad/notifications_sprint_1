@@ -1,8 +1,5 @@
-from datetime import datetime
 from enum import Enum
 from uuid import UUID, uuid4
-
-from pydantic import BaseModel, Field
 
 from .base_model import ORJSONBaseModel
 
@@ -19,15 +16,9 @@ class NotificationType(str, Enum):
     all = "all"
 
 
-class EventType(str, Enum):
-    welcome = "welcome"
-    notice = "notice"
-    statistics = "statistics"
-
-
 class RequestEventModel(ORJSONBaseModel):
     receiver: str | list
-    event_type: EventType
+    event_type: str
     event_name: str  # название шаблона
     type: NotificationType
     context: dict
@@ -36,4 +27,4 @@ class RequestEventModel(ORJSONBaseModel):
 class ResponseModel(ORJSONBaseModel):
     email: str
     event_type: str
-    context: dict | str
+    context: dict

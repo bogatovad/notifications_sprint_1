@@ -21,4 +21,4 @@ RUN chmod +x entrypoint.sh
 USER notification_service
 
 #ENTRYPOINT ["sh", "entrypoint.sh", ]
-CMD ["python", "src/main.py"]
+CMD ["gunicorn", "main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8080"]

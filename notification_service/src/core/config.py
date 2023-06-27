@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     rabbitmq_user: str = Field("rmuser", env="RABBITMQ_USER")
     rabbitmq_password: str = Field(env="RABBITMQ_PASSWORD")
     rabbitmq_delivery_mode: int = Field(2, env="RABBITMQ_DELIVERY_MODE")
+    rabbitmq_exchange: str = Field("main", env="RABBITMQ_EXCHANGE")
 
     class Config:
         env_file = "envs/.env"
@@ -30,6 +31,10 @@ class Settings(BaseSettings):
     def db_uri(self):
         """Возвращает URI базы данных."""
         return f"postgresql://{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.db_name}"
+    
+    @property
+    def rabbit_connection(self):
+        return f"amqp://{self.rabbitmq_user}:{self.rabbitmq_password}@{self.rabbitmq_host}/"
 
 
 settings = Settings()
