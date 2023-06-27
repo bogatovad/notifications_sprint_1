@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     smtp_host: str = Field(..., env="SMTP_HOST")
     smtp_port: str = Field(..., env="SMTP_PORT")
     ampq_url: str = Field(..., env="AMQP_URL")
+    api_key_email: str = Field(..., env='API_KEY_EMAIL')
+    clickhouse_host: str = Field(..., env='CLICKHOUSE_HOST')
+    rm_user: str = Field(..., env='RABBIT_USER')
+    rm_password: str = Field(..., env='RABBIT_PASSWORD')
+    rabbit_host: str = Field(..., env='RABBIT_HOST')
+    rabbit_port: int = Field(..., env='RABBIT_PORT')
 
     class Config:
         env_file = ".env"
