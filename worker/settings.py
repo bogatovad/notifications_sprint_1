@@ -30,4 +30,3 @@ EVENT_TO_TEMPLATE = {
 }
 
 settings = Settings()
-EMAIL = f"{settings.login}@{settings.domain}"
