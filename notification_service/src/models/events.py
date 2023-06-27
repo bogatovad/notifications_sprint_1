@@ -36,4 +36,4 @@ class RequestEventModel(ORJSONBaseModel):
 class ResponseModel(ORJSONBaseModel):
     email: str
     event_type: str
-    context: dict | str
+    context: dict
