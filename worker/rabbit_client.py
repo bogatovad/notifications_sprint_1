@@ -27,10 +27,7 @@ class RabbitMq:
     def _on_channel_open(self, channel) -> None:
         for queue in (SEND_WELCOME_QUEUE, NEW_FILMS_QUEUE):
             channel.exchange_declare(
-                exchange='main',
-                exchange_type='direct',
-                durable=True,
-                auto_delete=False
+                exchange="main", exchange_type="direct", durable=True, auto_delete=False
             )
             channel.basic_consume(queue=queue, on_message_callback=self._callback)
 

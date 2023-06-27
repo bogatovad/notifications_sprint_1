@@ -1,11 +1,10 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
 import uvicorn
-
 from api.v1.event_publisher import router
 from core.config import settings
+from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from services.publisher import get_rabbitmq, rabbitmq_worker
 
 

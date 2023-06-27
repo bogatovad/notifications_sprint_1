@@ -8,10 +8,10 @@ from settings import EVENT_TO_TEMPLATE
 class TemplateRenderManager:
     """Класс для управления шаблонами."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)))
 
-    def render_template(self, message_dict):
+    def render_template(self, message_dict: dict) -> str:
         """Генерация шаблона для отправки письма."""
         event = message_dict.get("event")
 

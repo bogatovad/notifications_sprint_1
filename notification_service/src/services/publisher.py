@@ -1,7 +1,5 @@
-
-from aio_pika import connect, Message
 import orjson
-
+from aio_pika import Message, connect
 from core.config import settings
 from models.events import RequestEventModel, ResponseModel, UserModel
 
@@ -15,7 +13,9 @@ class RabbitPublisher:
     async def connect(self) -> None:
         self._connection = await connect(settings.rabbit_connection)
         self._channel = await self._connection.channel()
-        self._exchange = await self._channel.declare_exchange(settings.rabbitmq_exchange)
+        self._exchange = await self._channel.declare_exchange(
+            settings.rabbitmq_exchange
+        )
 
     async def create_exchange(self, exchange_name: str):
         self.exchange = await self._channel.declare_exchange(name=exchange_name)
@@ -28,18 +28,14 @@ class RabbitPublisher:
         self._connection = None
         self._channel = None
 
-
     async def send_message(self, queue_name: str, message_data: ResponseModel):
         message = Message(
             body=orjson.dumps(message_data.dict()),
-            delivery_mode=settings.rabbitmq_delivery_mode
+            delivery_mode=settings.rabbitmq_delivery_mode,
         )
         queue = await self._channel.declare_queue(name=queue_name, durable=True)
         await queue.bind(self._exchange)
-        await self._exchange.publish(
-            routing_key=queue_name,
-            message=message
-        )
+        await self._exchange.publish(routing_key=queue_name, message=message)
 
     def close(self):
         self._connection.close()
@@ -55,7 +51,9 @@ class RabbitWorker(RabbitPublisher):
 
     async def produce(self, event: RequestEventModel, user: UserModel):
         response_data = self._get_data(event, user)
-        await self.send_message(queue_name=f"email.{event.event_type}", message_data=response_data)
+        await self.send_message(
+            queue_name=f"email.{event.event_type}", message_data=response_data
+        )
 
     async def produce_many(self, event: RequestEventModel, user_list: list[UserModel]):
         for user in user_list:
