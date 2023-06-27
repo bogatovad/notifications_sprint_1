@@ -2,4 +2,20 @@
 
 Проектные работы в этом модуле в команде. Задания на спринт вы найдёте внутри тем.
 
-ссылка на репозиторий - https://github.com/bogatovad/notifications_sprint_1
+Ссылка на репозиторий - https://github.com/bogatovad/notifications_sprint_1
+
+
+## Запуск
+Создать и заполнить .env из .env.example в папке `envs`.  
+Из этой же папки выполнить:
+- `make build`
+
+### Для создания суперпользователя:
+make superuser
+
+## Схема сервиса
+![](schemas/schema.png?raw=true "Схема сервиса")
+
+## Схема БД
+
+![](schemas/schema_db.png "Схема сервиса")
