@@ -1,5 +1,7 @@
 from fastapi import Depends
 
+from sqlalchemy.orm import Session
+
 from db.models import User
 from db.postgres import async_session
 from sqlalchemy.ext.asyncio import AsyncSession

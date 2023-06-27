@@ -4,6 +4,8 @@ from db.postgres import Base
 
 from db.postgres import Base
 
+from db.postgres import Base
+
 
 class BaseDBService:
     """Базовый класс сервисов."""

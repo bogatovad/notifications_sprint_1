@@ -26,8 +26,7 @@ class Settings(BaseSettings):
 TEMPLATES_DIR = "templates/"
 EVENT_TO_TEMPLATE = {
     "registration": os.path.join(TEMPLATES_DIR, "mail.html"),
-    "NEW_FILMS": os.path.join(TEMPLATES_DIR, "new_film.html"),
+    "new_films": os.path.join(TEMPLATES_DIR, "new_film.html"),
 }
 
 settings = Settings()
-EMAIL = f"{settings.login}@{settings.domain}"
