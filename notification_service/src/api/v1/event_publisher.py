@@ -16,9 +16,9 @@ async def send_notifications(
     user_service: UserService = Depends(get_user_service),
 ):
     if event.type == "personal":
-        user = user_service.find_one(id=event.receiver)
+        user = await user_service.find_one(id=event.receiver)
         await rabbit_worker.produce(event, user)
     else:
-        user_list = user_service.get_users(event.receiver)
-        rabbit_worker.produce_many(event, user_list)
+        user_list = await user_service.get_users(event.receiver)
+        await rabbit_worker.produce_many(event, user_list)
     return HTTPStatus.ACCEPTED

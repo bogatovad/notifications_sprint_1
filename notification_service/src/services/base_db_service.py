@@ -1,6 +1,7 @@
-from db.postgres import Base
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
+from db.postgres import Base
+
 from db.postgres import Base
 
 
@@ -11,4 +12,3 @@ class BaseDBService:
 
     def __init__(self, session: AsyncSession):
         self._session = session
-

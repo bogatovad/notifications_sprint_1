@@ -1,17 +1,15 @@
-from contextlib import contextmanager
+from fastapi import Depends
 
 from db.models import User
-from db.postgres import SessionLocal
+from db.postgres import async_session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from services.base_db_service import BaseDBService
-from sqlalchemy.orm import Session
 
 
-@contextmanager
-def service_with_session(session: Session):
-    """Возвращает подготовленный сервис."""
-    service = UserService(session)
-    yield service
-    service.close()
+async def get_session() -> AsyncSession:
+    async with async_session() as session:
+        yield session
 
 
 class UserService(BaseDBService):
@@ -19,20 +17,19 @@ class UserService(BaseDBService):
 
     _model = User
 
-    def find_one(self, **kwargs):
-        db_user = self._session.query(self._model).filter_by(**kwargs).first()
-        return db_user.serialize
+    async def find_one(self, **kwargs):
+        result = await self._session.execute(select(self._model).filter_by(**kwargs))
+        db_user = result.scalars().all()
+        return db_user[0].serialize
 
-    def get_users(self, user_list):
+    async def get_users(self, user_list):
         if not user_list:
-            db_users = self._session.query(self._model).all()
+            result = await self._session.execute(select(self._model))
         else:
-            db_users = self._session.query(self._model).filter(
-                self._model.id.in_(user_list)
-            )
+            result = await self._session.execute(select(self._model).filter(self._model.id.in_(user_list)))
+        db_users = result.scalars().all()
         return [item.serialize for item in db_users]
 
 
-def get_user_service() -> UserService:
-    with service_with_session(SessionLocal()) as service:
-        return service
+def get_user_service(session: AsyncSession = Depends(get_session)) -> UserService:
+    return UserService(session)

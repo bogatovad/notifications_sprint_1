@@ -61,7 +61,7 @@ class RabbitWorker(RabbitPublisher):
         for user in user_list:
             response_data = self._get_data(event, user)
             await self.send_message(
-                queue_name=f"email.{event.event_type}", message=response_data
+                queue_name=f"email.{event.event_type}", message_data=response_data
             )
 
 
