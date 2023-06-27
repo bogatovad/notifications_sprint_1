@@ -5,12 +5,14 @@ RUN mkdir -p /admin/static/ \
     && mkdir -p /admin/media/ \
     && groupadd -r usr \
     && useradd -d /admin/ -r -g usr usr \
-    && chown usr:usr -R /admin/
+    && chown usr:usr -R /admin/ \
+    && apt-get -y install libpq-dev gcc
 
-COPY requirements.txt requirements.txt
 COPY wait-for-it.sh /admin/
 RUN chmod +x ./wait-for-it.sh
-RUN pip install --upgrade pip && apt-get -y install libpq-dev gcc
+
+RUN pip install --upgrade pip
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
