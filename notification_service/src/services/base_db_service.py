@@ -1,5 +1,6 @@
-from db.postgres import Base
 from sqlalchemy.orm import Session
+
+from db.postgres import Base
 
 
 class BaseDBService:
