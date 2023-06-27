@@ -9,7 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 from notification_store import init_ch_connection
 from settings import DATA_TO_TEMPLATE, EMAIL, EVENT_TO_TEMPLATE, settings
 
-from worker.enums import STATUS
+from enums import STATUS
 import json
 
 
@@ -52,22 +52,21 @@ def init_smtp():
     return server
 
 
-def save_notification(data_message: dict[str, str]) -> None:
-    """Сохранение уведомления в базу."""
-    ch_client = init_ch_connection()
-    template_query: str = (
-        "INSERT INTO notification.regular_table "
-        "(id, status, context, date) VALUES ('{id}', '{status}', '{context}')"
-    )
-    query = template_query.format(**data_message)
-    ch_client.execute(query)
+# def save_notification(data_message: dict[str, str]) -> None:
+#     """Сохранение уведомления в базу."""
+#     ch_client = init_ch_connection()
+#     template_query: str = (
+#         "INSERT INTO notification.regular_table "
+#         "(id, status, context, date) VALUES ('{id}', '{status}', '{context}')"
+#     )
+#     query = template_query.format(**data_message)
+#     ch_client.execute(query)
 
 
-def send_message(message_dict):
+def send_message(email, message):
     """Функция для отправки сообщения."""
     server = init_smtp()
     message = message.as_string()
-    email = message_dict.get("email")
 
     try:
         server.sendmail(EMAIL, [email], message)
@@ -83,7 +82,7 @@ def send_message(message_dict):
         }
 
         # Сохраняем данные в clickhouse.
-        save_notification(data_message)
+        # save_notification(data_message)
         server.close()
 
 
@@ -96,4 +95,5 @@ def send(body):
     message = create_base_message()
     message.add_alternative(output, subtype="html")
 
-    send_message(message_dict)
+    email = message_dict.get("email")
+    send_message(email, message)
